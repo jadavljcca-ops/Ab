@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Calculator</title>
+<style>
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #1e1e1e;
+}
+
+.calculator {
+    background: #2b2b2b;
+    padding: 20px;
+    border-radius: 16%;
+    width: 260px;
+}
+
+.display {
+    width: 100%;
+    height: 50px;
+    font-size: 22px;
+    text-align: right;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: white;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+button {
+    height: 50px;
+    font-size: 18px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.5);
+}
+
+/* Number buttons */
+.num {
+    background: #444;
+    color: white;
+}
+
+/* Operator buttons */
+.op {
+    background: #666;
+    color: white;
+}
+
+/* Equal button */
+.equal {
+    background: orange;
+    color: white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+    <input type="text" id="display" class="display" readonly>
+
+    <div class="buttons">
+        <button class="op" onclick="clearDisplay()">C</button>
+        <button class="op" onclick="deleteLast()">Del</button>
+        <button class="op" onclick="inputOperator('%')">%</button>
+        <button class="op" onclick="inputOperator('/')">÷</button>
+
+        <button class="num" onclick="inputNumber('7')">7</button>
+        <button class="num" onclick="inputNumber('8')">8</button>
+        <button class="num" onclick="inputNumber('9')">9</button>
+        <button class="op" onclick="inputOperator('*')">×</button>
+
+        <button class="num" onclick="inputNumber('4')">4</button>
+        <button class="num" onclick="inputNumber('5')">5</button>
+        <button class="num" onclick="inputNumber('6')">6</button>
+        <button class="op" onclick="inputOperator('-')">−</button>
+
+        <button class="num" onclick="inputNumber('1')">1</button>
+        <button class="num" onclick="inputNumber('2')">2</button>
+        <button class="num" onclick="inputNumber('3')">3</button>
+        <button class="op" onclick="inputOperator('+')">+</button>
+
+        <button class="num" onclick="inputNumber('00')">00</button>
+        <button class="num" onclick="inputNumber('0')">0</button>
+        <button class="num" onclick="inputNumber('.')">.</button>
+        <button class="equal" onclick="calculate()">=</button>
+    </div>
+</div>
+
+<script>
+let display = document.getElementById("display");
+
+let current = "";
+let operator = "";
+let previous = "";
+let justCalculated = false;
+
+// Number input
+function inputNumber(num) {
+    if (justCalculated) {
+        current = "";
+        justCalculated = false;
+    }
+    current += num;
+    updateDisplay();
+}
+
+// Operator input
+function inputOperator(op) {
+    if (current === "") return;
+
+    if (previous !== "") {
+        calculate();
+    }
+
+    operator = op;
+    previous = current;
+    current = "";
+}
+
+// Calculate
+function calculate() {
+    if (previous === "" || current === "") return;
+
+    let result;
+
+    let a = parseFloat(previous);
+    let b = parseFloat(current);
+
+    switch (operator) {
+        case '+': result = a + b; break;
+        case '-': result = a - b; break;
+        case '*': result = a * b; break;
+        case '/': result = a / b; break;
+        case '%': result = a % b; break;
+    }
+
+    display.value = result;
+    current = result.toString();
+    previous = "";
+    operator = "";
+    justCalculated = true;
+}
+
+// Clear all
+function clearDisplay() {
+    current = "";
+    previous = "";
+    operator = "";
+    display.value = "";
+}
+
+// Delete last digit
+function deleteLast() {
+    current = current.slice(0, -1);
+    updateDisplay();
+}
+
+// Update display
+function updateDisplay() {
+    display.value = current;
+}
+</script>
+
+</body>
+</html>
